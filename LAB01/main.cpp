@@ -3,6 +3,7 @@
 
 int main() {
     //file instance
+    //new
     generateData File;
     File.start();
 
