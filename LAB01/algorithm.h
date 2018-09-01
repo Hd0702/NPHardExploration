@@ -6,7 +6,7 @@
 #define LAB01_ALGORITHM_H
 class algorithm {
 public:
-    enum sorts {Bubble, Merge, Insertion};
+    enum sorts {Bubble = 0, Merge = 1, Insertion = 2};
     //Takes a filename as and can read input data file
     virtual void load(const char *) = 0;
     //Executes the search algorithm

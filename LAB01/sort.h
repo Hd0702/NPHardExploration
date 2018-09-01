@@ -6,11 +6,12 @@
 #define LAB01_SORT_H
 
 #include "algorithm.h"
+#include <vector>
+
 //this is the overall class for implemnting sorts based off enums
 class sort: public algorithm {
 public:
     sort() = default;
-public:
     void load(const char*);
     void execute();
     void display();
@@ -18,6 +19,10 @@ public:
     void select(sorts);
     void save(const char*);
     void configure();
+
+private:
+    std::vector<int> data;
+    algorithm::sorts sortType;
 };
 
 
