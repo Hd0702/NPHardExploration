@@ -9,9 +9,17 @@
 #include "insertionSort.h"
 #include "mergeSort.h"
 
-void sort::load(const char * fileName) {
+int sort::dataSize = 0;
+std::string sort::algoType = "";
+std::string sort::dataType ="";
+
+sort::sort() {
+
+}
+void sort::load(const char * fileName, const char * fileType) {
+    sort::dataSize = 0;
+    sort::dataType = fileType;
     data.clear();
-    std::cout <<"Loading: " << fileName << std::endl;
     std::ifstream file(fileName);
     if(!file) {
         std::cerr << fileName <<" could not be opened" << std::endl;
@@ -25,6 +33,7 @@ void sort::load(const char * fileName) {
             file >>item;
             data.push_back(item);
             file.ignore();
+            sort::dataSize++;
             if(file.eof()) break;
         }
     }
@@ -33,22 +42,30 @@ void sort::load(const char * fileName) {
 //executes sort
 void sort::execute() {
     if(sortType == Bubble) {
-        //bubbleSort<int> bubble(data);
+        sort::algoType = "Bubble";
+        bubbleSort<int> bubble(data);
     }
     else if(sortType == Merge) {
+        sort::algoType = "Merge";
         mergeSort<int> merge(data);
     }
     else if(sortType == Insertion) {
-        //insertionSort<int> insert(data);
+        sort::algoType = "Insertion";
+        insertionSort<int> insert(data);
     }
 }
 //prints data to screen (probably wont be used)
 void sort::display() {
-
+    for(auto & item: data) {
+        std::cout << item << std::endl;
+    }
 }
-//last
-void sort::stats(){
-
+//Prints algorithm name, execution time and number of records analyzed to screen
+void sort::stats(unsigned int time){
+    std::cout << "Algorithm type: " << sort::algoType << std::endl;
+    std::cout << "Data set type: " << sort::dataType << std::endl;
+    std::cout << "Size (in ints): " << sort::dataSize << std::endl;
+    std::cout << "Time taken(in microseconds): " << time << "\n" << std::endl;
 }
 //sets sort type
 void sort::select(algorithm::sorts item) {
@@ -56,7 +73,17 @@ void sort::select(algorithm::sorts item) {
 }
 //saves to file
 void sort::save(const char * fileName) {
-    //std::cout <<"Saving: " << fileName << std::endl;
+    std::ofstream output(fileName);
+    if(!output) {
+        std::cerr << fileName << " could not be opened";
+        exit(EXIT_FAILURE);
+    }
+    else {
+        for(auto & item: data){
+            output << item << std::endl;
+        }
+    }
+    output.close();
 }
 //this method should be blank
 void sort::configure() {

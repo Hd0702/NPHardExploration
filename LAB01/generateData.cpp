@@ -33,7 +33,7 @@ void generateData::random(int size){
 void generateData::reverse(int size) {
     std::ofstream output;
     output.open("Reverse" + std::to_string(size) + ".txt");
-    for(int i = size-1; i >= 0; i--) {
+    for(int i = size; i > 0 ; i--) {
         output << i << "\n";
     }
     output.close();
@@ -73,20 +73,25 @@ void generateData::twentyPercent(int size) {
         output << rand(rng) << "\n";
     }
     //now for 80% that repeat
-    for(int i =0; i < size * .8; i++) {
+    std::map<int,int>repeatVals;
+    int total = 0;
+    int stopPoint = size *.8;
+    while(total < stopPoint) {
         std::uniform_int_distribution<std::mt19937::result_type> rand(1, 10000);
-        auto iter = uniqueVals.find(rand(rng));
-        if(iter != uniqueVals.end()) {
-            int temp = iter->second;
-            iter->second = ++temp;
+        auto iter = repeatVals.find(rand(rng));
+        if(iter != repeatVals.end()) {
+            ++(iter->second);
+            for(int i =0; i < iter->second; i++) {
+                if(total == stopPoint) break;
+                else total++;
+            }
         }
         else  {
-            uniqueVals.emplace(rand(rng), 1);
-            i--;
+            repeatVals.emplace(rand(rng), 1);
         }
     }
     std::vector<int> shuffle;
-    for(auto const& item : uniqueVals){
+    for(auto const& item : repeatVals){
         if(item.second > 1) {
             for(int i = item.second; i > 0; i--)
                 shuffle.push_back(item.first);
@@ -94,8 +99,9 @@ void generateData::twentyPercent(int size) {
     }
     auto engine = std::default_random_engine{};
     std::shuffle(shuffle.begin(), shuffle.end(), engine );
-    for(auto & k : shuffle) {
-        output << k << "\n";
+    auto k = shuffle.begin();
+    for(int i =0; i < total; i++) {
+        output << *(k++) << "\n";
     }
     output.close();
 }

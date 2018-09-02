@@ -15,13 +15,12 @@ int main() {
         for(int i=0; i < 4; i++) {
             for(int j =0; j<4; j++) {
                 std::string path = inputTypes[i] + std::to_string(sizes[j]) + ".txt";
-                algos->load(path.c_str());
+                algos->load(path.c_str(), inputTypes[i]);
                 algos->execute();
                 path = sortTypes[q]  + std::to_string(sizes[j]) +  inputTypes[i]  + ".txt";
                 algos->save(path.c_str());
             }
         }
     }
-   algos->stats();
     return 0;
 }
