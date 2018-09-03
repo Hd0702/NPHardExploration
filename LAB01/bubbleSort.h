@@ -6,7 +6,7 @@
 #define LAB01_BUBBLESORT_H
 #include "sort.h"
 #include <vector>
-
+//this class is a templated implementation of bubble sort
 template<typename T>
 class bubbleSort : public sort{
 public:
@@ -14,7 +14,7 @@ public:
     void begin(std::vector<T> &);
 
 };
-
+//constructor starts the clock and sends it to stats
 template <typename T>
 bubbleSort<T>::bubbleSort(std::vector<T> & input) {
     auto start = std::chrono::high_resolution_clock::now();
@@ -23,7 +23,7 @@ bubbleSort<T>::bubbleSort(std::vector<T> & input) {
     unsigned int total = std::chrono::duration_cast<std::chrono::microseconds>(end-start).count();
     sort::stats(total);
 }
-
+//the actual bubble sort that handles the algorithm
 template <typename T>
 void bubbleSort<T>::begin(std::vector<T> & data) {
     int size = data.size()-1;

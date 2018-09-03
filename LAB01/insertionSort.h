@@ -4,6 +4,7 @@
 
 #ifndef LAB01_INSERTIONSORT_H
 #define LAB01_INSERTIONSORT_H
+//this is my implementation of templated insertion sort
 template <typename T>
 class insertionSort: public sort {
 public:
@@ -11,7 +12,7 @@ public:
 private:
     void sort(std::vector<T> &);
 };
-
+//the constructor starts the clock and runs each method and sends to stats
 template <typename T>
 insertionSort<T>::insertionSort(std::vector<T> & items) {
     auto start = std::chrono::high_resolution_clock::now();
@@ -20,7 +21,7 @@ insertionSort<T>::insertionSort(std::vector<T> & items) {
     unsigned int total = std::chrono::duration_cast<std::chrono::microseconds>(end-start).count();
     sort::stats(total);
 }
-
+//the actual algorithm to sort items
 template <typename T>
 void insertionSort<T>::sort(std::vector<T> & items) {
     for(int i =0; i < items.size(); i++) {

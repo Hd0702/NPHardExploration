@@ -5,7 +5,9 @@
 #ifndef LAB01_GENERATEDATA_H
 #define LAB01_GENERATEDATA_H
 
-
+/* this class is responsible for the
+ * creation of all input files with each data size
+*/
 class generateData {
 public:
     generateData() = default;

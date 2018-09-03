@@ -4,7 +4,9 @@
 
 #ifndef LAB01_ALGORITHM_H
 #define LAB01_ALGORITHM_H
-
+ /*this class is the pure virtual class that sort implements from
+ * I made it pure virtual for easy expandability for a possible search in lab2
+ */
 class algorithm {
 public:
     enum sorts {Bubble = 0, Merge = 1, Insertion = 2};

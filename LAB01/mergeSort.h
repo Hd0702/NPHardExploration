@@ -8,7 +8,7 @@
 #include "sort.h"
 #include <vector>
 #include <string>
-
+//this is my implementation of a templated merge sort
 template <typename T>
 class mergeSort : public sort{
 public:
@@ -18,7 +18,7 @@ private:
     void split(std::vector<T> & , int, int);
     void merge(std::vector<T> &, int, int, int);
 };
-
+//we will send the full vector to split and start the clock
 template <typename T>
 mergeSort<T>::mergeSort(std::vector<T> & input)  {
     auto start = std::chrono::high_resolution_clock::now();
@@ -27,7 +27,7 @@ mergeSort<T>::mergeSort(std::vector<T> & input)  {
     unsigned int total = std::chrono::duration_cast<std::chrono::microseconds>(end-start).count();
     sort::stats(total);
 }
-
+//this is where we split the vector into a partition
 template <typename T>
 void mergeSort<T>::split(std::vector<T> & items, int low, int high) {
     if (low < high) {
@@ -37,7 +37,7 @@ void mergeSort<T>::split(std::vector<T> & items, int low, int high) {
         merge(items, low, high, pivot);
     }
 }
-
+//the actual merge where we swap items in sets in order
 template <typename T>
 void mergeSort<T>::merge(std::vector<T> & items, int low, int high, int pivot) {
     int i = low;

@@ -9,13 +9,14 @@
 #include "insertionSort.h"
 #include "mergeSort.h"
 
+/* I created these statics so the sort methods can call stats method
+ * they will provide the correct data without passing too many params
+ */
 int sort::dataSize = 0;
 std::string sort::algoType = "";
 std::string sort::dataType ="";
 
-sort::sort() {
-
-}
+//load takes a filename and reads contents into a vector
 void sort::load(const char * fileName, const char * fileType) {
     sort::dataSize = 0;
     sort::dataType = fileType;
@@ -40,6 +41,7 @@ void sort::load(const char * fileName, const char * fileType) {
     file.close();
 }
 //executes sort
+//also sets statics for stats method
 void sort::execute() {
     if(sortType == Bubble) {
         sort::algoType = "Bubble";
@@ -54,7 +56,7 @@ void sort::execute() {
         insertionSort<int> insert(data);
     }
 }
-//prints data to screen (probably wont be used)
+//prints data to screen
 void sort::display() {
     for(auto & item: data) {
         std::cout << item << std::endl;
@@ -71,7 +73,7 @@ void sort::stats(unsigned int time){
 void sort::select(algorithm::sorts item) {
     sortType = item;
 }
-//saves to file
+//saves to file with a passed in filename formatted in main
 void sort::save(const char * fileName) {
     std::ofstream output(fileName);
     if(!output) {
@@ -85,7 +87,7 @@ void sort::save(const char * fileName) {
     }
     output.close();
 }
-//this method should be blank
+//this method should be blank for future expandability
 void sort::configure() {
 
 }

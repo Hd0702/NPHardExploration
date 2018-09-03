@@ -29,7 +29,7 @@ void generateData::random(int size){
     }
     output.close();
 }
-
+//prints item in a file in reverse order
 void generateData::reverse(int size) {
     std::ofstream output;
     output.open("Reverse" + std::to_string(size) + ".txt");
@@ -38,7 +38,7 @@ void generateData::reverse(int size) {
     }
     output.close();
 }
-
+//thirty percent of the items are randomly generated
 void generateData::thirtyPercent(int size) {
     std::vector<int> data;
     std::ofstream output;
@@ -58,7 +58,10 @@ void generateData::thirtyPercent(int size) {
         output << key << "\n";
     output.close();
 }
-
+/* in this method i used two sets
+ * uniqeVals- stores 20% of the unique values and prints them
+ * repeateVals - checks uniquevals and adds new values
+ */
 void generateData::twentyPercent(int size) {
     std::mt19937 rng;
     rng.seed(std::random_device()());
@@ -79,17 +82,19 @@ void generateData::twentyPercent(int size) {
     while(total < stopPoint) {
         std::uniform_int_distribution<std::mt19937::result_type> rand(1, 10000);
         auto iter = repeatVals.find(rand(rng));
-        if(iter != repeatVals.end()) {
-            ++(iter->second);
-            for(int i =0; i < iter->second; i++) {
-                if(total == stopPoint) break;
-                else total++;
+        if(uniqueVals.find(rand(rng)) == uniqueVals.end()) {
+            if (iter != repeatVals.end()) {
+                ++(iter->second);
+                for (int i = 0; i < iter->second; i++) {
+                    if (total == stopPoint) break;
+                    else total++;
+                }
+            } else {
+                repeatVals.emplace(rand(rng), 1);
             }
         }
-        else  {
-            repeatVals.emplace(rand(rng), 1);
-        }
     }
+    //shuffle all items in a set since they are in order because a set is a tree
     std::vector<int> shuffle;
     for(auto const& item : repeatVals){
         if(item.second > 1) {

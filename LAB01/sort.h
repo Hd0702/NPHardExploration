@@ -8,10 +8,11 @@
 #include "algorithm.h"
 #include <vector>
 #include <string>
-//this is the overall class for implemnting sorts based off enums
+//this is the overall class for implementing sorts based off enums
+//it inherits from algorithm and uses all sort types
 class sort: public algorithm {
 public:
-    sort();
+    sort() = default;
     void load(const char*, const char *);
     void execute();
     void display();
