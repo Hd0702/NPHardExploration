@@ -28,14 +28,10 @@ void sort::load(const char * fileName, const char * fileType) {
     }
     else {
         int item = 0;
-        file >> item;
-        file.ignore();
-        while(file.good()) {
-            file >>item;
+        while(file >> item) {
             data.push_back(item);
             file.ignore();
             sort::dataSize++;
-            if(file.eof()) break;
         }
     }
     file.close();

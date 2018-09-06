@@ -3,12 +3,13 @@
 #include "generateData.h"
 #include "sort.h"
 int main() {
-    /*run the below lines to generate input files in local directory
-     *
-     *
-     * generateData File;
-     * File.start();
+    /* run the below lines to generate input files in local directory
+     * recommend running the following two lines the first time to populate possible build directory
      */
+
+      generateData File;
+      File.start();
+
     const int sizes[4] = {10, 1000, 10000, 100000};
     const char * inputTypes[4] = {"Random", "Reverse", "ThirtyPercent", "TwentyPercent"};
     const char * sortTypes[3] = {"Bubble", "Merge", "Insertion"};

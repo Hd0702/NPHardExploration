@@ -96,6 +96,7 @@ void generateData::twentyPercent(int size) {
     }
     //shuffle all items in a set since they are in order because a set is a tree
     std::vector<int> shuffle;
+    //add all items in the set that repeat
     for(auto const& item : repeatVals){
         if(item.second > 1) {
             for(int i = item.second; i > 0; i--)

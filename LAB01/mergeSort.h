@@ -7,7 +7,6 @@
 
 #include "sort.h"
 #include <vector>
-#include <string>
 //this is my implementation of a templated merge sort
 template <typename T>
 class mergeSort : public sort{
