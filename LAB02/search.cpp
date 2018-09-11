@@ -66,65 +66,65 @@ void search::load(const char * searchName, const char * Weights, const char * di
         adjList[counter][0].x = coords[0];
         adjList[counter][0].y = coords[1];
         adjList[counter][0].z = coords[2];
-        double add = sqrt(pow(coords[0],2) + pow(coords[1],2) + pow(coords[2],2));
-        adjList[counter][0].distance= add;
+        adjList[counter][0].distance= sqrt(pow(coords[0],2) + pow(coords[1],2) + pow(coords[2],2));
         counter++;
     }
     //now calculate the rest of the distance
-    for(int i =0; i < matrixSize; i++) {
-        std::cout<< adjList[i].size() << std::endl;
-    }
     for(int i =0; i < matrixSize; i ++) {
         //go through each item and calculate distance based off data
         auto start = adjList[i].begin();
         for (auto iter = adjList[i].begin() + 1; iter != adjList[i].end(); iter++) {
             auto firstNew = adjList[iter->data-1].begin();
-            std::cout << iter->data << " ";
             iter->distance = sqrt(pow((firstNew->x - start->x), 2) +
                                   pow((firstNew->y - start->y), 2) +
                                   pow((firstNew->z - start->z), 2));
         }
-        std::cout << "\n";
-    }
-    for(auto & k : adjList) {
-        for(auto & j : k) {
-            std::cout << "(" << j.data << " " << j.distance << ")";
-        }
-        std::cout << std::endl;
     }
     //now for weights
-
+    reader.clear();
+    while(getline(weights, reader)) {
+        std::stringstream line(reader);
+        std::string breaker;
+        //seperate item stuct for respective item
+        std::getline(line, breaker, ',');
+        int firstitem = std::stoi(breaker);
+        auto first = adjList[firstitem-1].begin();
+        //now get second
+        std::getline(line, breaker, ',');
+        int seconditem = std::stoi(breaker);
+        std::getline(line, breaker, ',');
+        int weight = std::stoi(breaker);
+        for(auto & x: adjList[firstitem-1]) {
+            if (x.data == seconditem) {
+                x.weight = weight;
+            }
+        }
+        //now get weight
+    }
     //now for matrix
     open.clear();
     open.seekg(0, std::ios::beg);
-    matrix = new int*[matrixSize];
+    matrix = new item*[matrixSize];
     for(int i =0; i < matrixSize; i++) {
-        matrix[i] = new int[matrixSize];
-        for(int x = 0; x < matrixSize; x++) {
-            matrix[i][x] = 0;
-        }
+        matrix[i] = new item[matrixSize];
     }
     reader.clear();
     int row = 0;
     while(getline(open, reader)) {
+        int adjcounter =1;
         std::stringstream line(reader);
         std::string breaker;
         //remove first element
         std::getline(line, breaker, ',');
-        while(std::getline(line, breaker, ',')){
+        while(std::getline(line, breaker, ',')) {
             int print = std::stoi(breaker);
-            matrix[row][print-1] = 1;
+            matrix[row][print - 1] = adjList[row][adjcounter++];
         }
         row++;
     }
-    for(int i =0; i < matrixSize; i ++) {
-        for(int x =0 ;x < matrixSize; x ++) {
-            std::cout << matrix[i][x] << " ";
-        }
-        std::cout << std::endl;
-    }
     open.close();
-
+    weights.close();
+    distances.close();
 }
 
 void search::execute() {
