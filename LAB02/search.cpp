@@ -5,9 +5,9 @@
 #include "search.h"
 #include <fstream>
 #include <iostream>
-#include <string>
 #include <sstream>
 #include <cmath>
+#include "DFS.h"
 //load in fileName and create list or matrix
 search::~search() {
     //destruct adj matrix here
@@ -15,7 +15,6 @@ search::~search() {
 
 void search::load(const char * searchName, const char * Weights, const char * distance) {
     adjList.clear();
-    int matrixSize = 0;
     std::ifstream open(searchName);
     if(!open) {
         std::cerr << searchName << " could not be opened";
@@ -38,10 +37,17 @@ void search::load(const char * searchName, const char * Weights, const char * di
         std::stringstream line(reader);
         int item = 0;
         std::string breaker;
-        std::vector<search::item> points;
-        //seperate item stuct for respective item
+        std::vector<search::Node> points;
+        //get first
+        std::getline(line, breaker, ',');
+        search::Node add;
+        add.x =0; add.y =0; add.z=0; add.weight = 0;
+        add.data = std::stoi(breaker);
+        points.push_back(add);
+        //seperate Node stuct for respective Node
+        //set pointers to new nodes
         while(std::getline(line, breaker, ',')){
-            search::item add;
+            search::Node add;
             add.x =0; add.y =0; add.z=0; add.weight = 0;
             add.data = std::stoi(breaker);
             points.push_back(add);
@@ -56,7 +62,7 @@ void search::load(const char * searchName, const char * Weights, const char * di
         int item = 0;
         int coords[3];
         std::string breaker;
-        //seperate item stuct for respective item
+        //seperate Node stuct for respective Node
         std::getline(line, breaker, ',');
         int index = std::stoi(breaker);
         int counterin = 0;
@@ -66,18 +72,18 @@ void search::load(const char * searchName, const char * Weights, const char * di
         adjList[counter][0].x = coords[0];
         adjList[counter][0].y = coords[1];
         adjList[counter][0].z = coords[2];
-        adjList[counter][0].distance= sqrt(pow(coords[0],2) + pow(coords[1],2) + pow(coords[2],2));
+        adjList[counter][0].distance= pow(coords[0],2) + pow(coords[1],2) + pow(coords[2],2);
         counter++;
     }
     //now calculate the rest of the distance
     for(int i =0; i < matrixSize; i ++) {
-        //go through each item and calculate distance based off data
+        //go through each Node and calculate distance based off data
         auto start = adjList[i].begin();
         for (auto iter = adjList[i].begin() + 1; iter != adjList[i].end(); iter++) {
             auto firstNew = adjList[iter->data-1].begin();
-            iter->distance = sqrt(pow((firstNew->x - start->x), 2) +
-                                  pow((firstNew->y - start->y), 2) +
-                                  pow((firstNew->z - start->z), 2));
+            iter->distance = pow((firstNew->x - start->x), 2) +
+                             pow((firstNew->y - start->y), 2) +
+                             pow((firstNew->z - start->z), 2);
         }
     }
     //now for weights
@@ -85,7 +91,7 @@ void search::load(const char * searchName, const char * Weights, const char * di
     while(getline(weights, reader)) {
         std::stringstream line(reader);
         std::string breaker;
-        //seperate item stuct for respective item
+        //seperate Node stuct for respective Node
         std::getline(line, breaker, ',');
         int firstitem = std::stoi(breaker);
         auto first = adjList[firstitem-1].begin();
@@ -104,9 +110,9 @@ void search::load(const char * searchName, const char * Weights, const char * di
     //now for matrix
     open.clear();
     open.seekg(0, std::ios::beg);
-    matrix = new item*[matrixSize];
+    matrix = new Node*[matrixSize];
     for(int i =0; i < matrixSize; i++) {
-        matrix[i] = new item[matrixSize];
+        matrix[i] = new Node[matrixSize];
     }
     reader.clear();
     int row = 0;
@@ -122,14 +128,20 @@ void search::load(const char * searchName, const char * Weights, const char * di
         }
         row++;
     }
+    for(int o = 0; o < matrixSize; o++){
+        for(int p =0; p < matrixSize; p++){
+            std::cout << matrix[o][p].distance << " ";
+        }
+        std::cout << "\n";
+    }
     open.close();
     weights.close();
     distances.close();
 }
 
 void search::execute() {
-    if(searchType == DFS){
-        //dfs here plz
+    if(searchType == Dfs){
+        DFS A(adjList, matrix, 1 , 13, matrixSize);
     }
     else if(searchType == BFS) {
 

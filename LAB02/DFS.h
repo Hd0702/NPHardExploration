@@ -10,8 +10,13 @@
 
 class DFS: public search {
 public:
-    DFS(std::vector<std::list<int> > &, int **);
-    void execute(std::vector<std::list<int> >&, int**);
+    DFS(std::vector<std::vector<Node> >& , Node **, int, int, int);
+    void executeIterativeList(std::vector<std::vector<Node> >, int, int);
+    void executeIterativeMatrix(Node **, int, int);
+    void executeRecursiveList(std::vector<std::vector<search::Node> >, int , int);
+    void executeRecrusiveMatrix(Node **, int , int);
+private:
+int matrixSize = 0;
 };
 
 

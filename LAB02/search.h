@@ -12,13 +12,14 @@
 
 class search: public algorithm {
 public:
-    struct item {
-        int data;
-        double distance;
-        int x; //only used for calculating distance
-        int y;
-        int z;
-        int weight;
+    struct Node {
+        int data = 0;
+        double distance= 0.0;
+        int x= 0; //only used for calculating distances
+        int y = 0;
+        int z = 0;
+        bool visited = false;
+        int weight = 0;
     };
     search() = default;
     ~search();
@@ -30,9 +31,10 @@ public:
     void save(const char*);
     void configure();
 private:
-    std::vector<std::vector<item> > adjList;
+    int matrixSize = 0;
+    std::vector<std::vector<Node> > adjList;
     algorithm::searches searchType;
-    int ** matrix;
+    Node ** matrix;
 };
 
 #endif //LAB02_SEARCH_H
