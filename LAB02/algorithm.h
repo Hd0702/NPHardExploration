@@ -9,7 +9,7 @@
 */
 class algorithm {
 public:
-    enum searches {Dfs = 0, BFS = 1, Dijsktra = 2, A = 3};
+    enum searches {DFS = 0, BFS, DIJSKTRA, A};
     //Takes a filename as and can read input data file
     virtual void load(const char *, const char *, const char *) = 0;
     //Executes the search algorithm

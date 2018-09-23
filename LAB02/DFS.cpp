@@ -3,8 +3,8 @@
 //
 #include <stack>
 #include <array>
-#include "DFS.h"
-DFS::DFS(std::vector<std::vector<Node> > & adjList, Node ** matrix, int start, int end, int Size) {
+#include "dfs.h"
+dfs::dfs(std::vector<std::vector<Node> >  adjList, Node ** matrix, int start, int end, int Size) {
     //now we execute both
     matrixSize = Size;
     executeIterativeList(adjList, start, end);
@@ -18,7 +18,7 @@ DFS::DFS(std::vector<std::vector<Node> > & adjList, Node ** matrix, int start, i
     executeRecrusiveMatrix(matrix, start, end);
 }
 
-void DFS::executeIterativeList(std::vector<std::vector<Node> >  adjList, int start, int end) {
+void dfs::executeIterativeList(std::vector<std::vector<Node> >  adjList, int start, int end) {
 //execute iterative search for adjlist
     std::stack<Node> Items;
     auto iter = adjList[start-1].begin();
@@ -43,7 +43,7 @@ void DFS::executeIterativeList(std::vector<std::vector<Node> >  adjList, int sta
         }
     }
 }
-void DFS::executeIterativeMatrix(Node ** matrix, int start, int end) {
+void dfs::executeIterativeMatrix(Node ** matrix, int start, int end) {
     std::stack<int> Items;
     Node *iter = &matrix[start-1][0];
     iter->visited = true;
@@ -69,23 +69,24 @@ void DFS::executeIterativeMatrix(Node ** matrix, int start, int end) {
     }
 }
 
-void DFS::executeRecursiveList(std::vector<std::vector<search::Node> > adjList, int start, int end) {
+void dfs::executeRecursiveList(std::vector<std::vector<search::Node> > adjList, int start, int end) {
     if(start == end)
         return;
     adjList[start-1][0].visited = true;
     for(auto iter = adjList[start-1].begin()+1; iter != adjList[start-1].end(); iter++) {
         if(!adjList[iter->data-1][0].visited) {
-            DFS::executeRecursiveList(adjList, iter->data, end);
+
+            dfs::executeRecursiveList(adjList, iter->data, end);
         }
     }
 }
 
-void DFS::executeRecrusiveMatrix(Node ** matrix, int start, int end) {
+void dfs::executeRecrusiveMatrix(Node ** matrix, int start, int end) {
     if (start == end)
         return;
     matrix[start-1][start-1].visited = true;
     for(int i =0; i < matrixSize; i++){
         if(matrix[start-1][i].data != 0 && !matrix[i][i].visited)
-            DFS::executeRecrusiveMatrix(matrix, i+1, end);
+            dfs::executeRecrusiveMatrix(matrix, i+1, end);
     }
 }

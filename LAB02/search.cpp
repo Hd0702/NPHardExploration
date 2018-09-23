@@ -7,7 +7,10 @@
 #include <iostream>
 #include <sstream>
 #include <cmath>
-#include "DFS.h"
+#include "dfs.h"
+#include "bfs.h"
+#include "Dijkstra.h"
+#include "AStar.h"
 //load in fileName and create list or matrix
 search::~search() {
     //destruct adj matrix here
@@ -42,14 +45,14 @@ void search::load(const char * searchName, const char * Weights, const char * di
         std::getline(line, breaker, ',');
         search::Node add;
         add.x =0; add.y =0; add.z=0; add.weight = 0;
-        add.data = std::stoi(breaker);
+        add.data = std::stod(breaker);
         points.push_back(add);
         //seperate Node stuct for respective Node
         //set pointers to new nodes
         while(std::getline(line, breaker, ',')){
             search::Node add;
             add.x =0; add.y =0; add.z=0; add.weight = 0;
-            add.data = std::stoi(breaker);
+            add.data = std::stod(breaker);
             points.push_back(add);
         }
         adjList.push_back(points);
@@ -60,14 +63,14 @@ void search::load(const char * searchName, const char * Weights, const char * di
     while(getline(distances, reader)) {
         std::stringstream line(reader);
         int item = 0;
-        int coords[3];
+        double coords[3];
         std::string breaker;
         //seperate Node stuct for respective Node
         std::getline(line, breaker, ',');
-        int index = std::stoi(breaker);
+        double index = std::stod(breaker);
         int counterin = 0;
         while (std::getline(line, breaker, ',')) {
-            coords[counterin++] = std::stoi(breaker);
+            coords[counterin++] = std::stod(breaker);
         }
         adjList[counter][0].x = coords[0];
         adjList[counter][0].y = coords[1];
@@ -93,13 +96,13 @@ void search::load(const char * searchName, const char * Weights, const char * di
         std::string breaker;
         //seperate Node stuct for respective Node
         std::getline(line, breaker, ',');
-        int firstitem = std::stoi(breaker);
+        int firstitem = std::stod(breaker);
         auto first = adjList[firstitem-1].begin();
         //now get second
         std::getline(line, breaker, ',');
-        int seconditem = std::stoi(breaker);
+        int seconditem = std::stod(breaker);
         std::getline(line, breaker, ',');
-        int weight = std::stoi(breaker);
+        int weight = std::stod(breaker);
         for(auto & x: adjList[firstitem-1]) {
             if (x.data == seconditem) {
                 x.weight = weight;
@@ -123,34 +126,69 @@ void search::load(const char * searchName, const char * Weights, const char * di
         //remove first element
         std::getline(line, breaker, ',');
         while(std::getline(line, breaker, ',')) {
-            int print = std::stoi(breaker);
+            int print = std::stod(breaker);
             matrix[row][print - 1] = adjList[row][adjcounter++];
         }
         row++;
     }
     for(int o = 0; o < matrixSize; o++){
         for(int p =0; p < matrixSize; p++){
-            std::cout << matrix[o][p].distance << " ";
+            if(p == o){
+                matrix[p][o].data = p+1;
+            }
+            std::cout << matrix[o][p].weight << " ";
         }
         std::cout << "\n";
-    }
+    }std::cout << "\n";
     open.close();
     weights.close();
     distances.close();
 }
 
 void search::execute() {
-    if(searchType == Dfs){
-        DFS A(adjList, matrix, 1 , 13, matrixSize);
+    if(searchType == DFS){
+        Node **temp = new Node*[matrixSize];
+        for(int i =0; i <matrixSize; i++){
+            temp[i] = new Node[matrixSize];
+        }
+        for(int i = 0; i < matrixSize; i++){
+            for (int q =0; q<matrixSize; q++)
+                temp[i][q] = matrix[i][q];
+        }
+        dfs A(adjList, matrix, 1 , 13, matrixSize);
     }
     else if(searchType == BFS) {
-
+        Node **temp = new Node*[matrixSize];
+        for(int i =0; i <matrixSize; i++){
+            temp[i] = new Node[matrixSize];
+        }
+        for(int i = 0; i < matrixSize; i++){
+            for (int q =0; q<matrixSize; q++)
+                temp[i][q] = matrix[i][q];
+        }
+        bfs B(adjList, matrix, 1, 13, matrixSize);
     }
-    else if(searchType == Dijsktra) {
-
+    else if(searchType == DIJSKTRA) {
+        Node **temp = new Node*[matrixSize];
+        for(int i =0; i <matrixSize; i++){
+            temp[i] = new Node[matrixSize];
+        }
+        for(int i = 0; i < matrixSize; i++){
+            for (int q =0; q<matrixSize; q++)
+                temp[i][q] = matrix[i][q];
+        }
+        Dijkstra C(adjList, temp, 1, 13, matrixSize);
     }
     else if(searchType == A) {
-
+        Node **temp = new Node*[matrixSize];
+        for(int i =0; i <matrixSize; i++){
+            temp[i] = new Node[matrixSize];
+        }
+        for(int i = 0; i < matrixSize; i++){
+            for (int q =0; q<matrixSize; q++)
+                temp[i][q] = matrix[i][q];
+        }
+        AStar D(adjList, temp, 1, 13, matrixSize);
     }
 }
 
