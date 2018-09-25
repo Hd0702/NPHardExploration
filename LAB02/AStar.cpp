@@ -4,6 +4,7 @@
 
 #include "AStar.h"
 #include <queue>
+#include <iostream>
 
 AStar::AStar(std::vector<std::vector<Node> > &adjList, Node **matrix, int start, int end, int size): matrixSize(size) {
     executeList(adjList, start, end);
@@ -11,7 +12,8 @@ AStar::AStar(std::vector<std::vector<Node> > &adjList, Node **matrix, int start,
 }
 
 void AStar::executeList(std::vector<std::vector<Node> > adjList, int start, int end) {
-    //UPDATE TO ADD FOR TOTAL WEIGHTS
+    int nodesSearched= 1; int distance = 0;
+    auto begin = std::chrono::high_resolution_clock::now();
     std::priority_queue<Node> items;
     //set starting location
     int counter = 0;
@@ -19,6 +21,8 @@ void AStar::executeList(std::vector<std::vector<Node> > adjList, int start, int 
         J[0].distance = INT32_MAX;
         J[0].weight = INT32_MAX;
     }
+    adjList[start-1][0].distance = 0;
+    adjList[start-1][0].weight = 0;
     //update og distance values
     for(auto J= adjList[start-1].begin(); J != adjList[start-1].end(); J++){
         adjList[J->data-1][0].distance = J->distance;
@@ -33,11 +37,10 @@ void AStar::executeList(std::vector<std::vector<Node> > adjList, int start, int 
     Node min;
     min.data = start;
     while(!items.empty()) {
-        if(items.top().data == end && items.top().data != INT32_MAX)
-            return;
         //skip first node
         if (min.data != start) {
             min = items.top();
+            totalWeight = min.weight;
             adjList[min.data-1][0].visited = true;
         }
         else {
@@ -45,14 +48,29 @@ void AStar::executeList(std::vector<std::vector<Node> > adjList, int start, int 
             min.distance = 0;
             min.weight = 0;
         }
+        if(items.top().data == end && items.top().data != INT32_MAX) {
+            auto finish = std::chrono::high_resolution_clock::now();
+            unsigned int total = std::chrono::duration_cast<std::chrono::microseconds>(finish-begin).count();
+            std::list<int> path;
+            auto iter = adjList[end-1].begin();
+            while(iter->prev != nullptr){
+                path.push_front(iter->data);
+                iter = (adjList[iter->prev->data-1].begin());
+            }
+            path.push_front(start);
+            search::stats(path, total, nodesSearched, items.top().distance, items.top().weight, "List");
+            return;
+        }
         //loop through each vertex
         items.pop();
         for(auto loop = adjList[min.data-1].begin()+1; loop != adjList[min.data-1].end(); loop++) {
+            nodesSearched++;
             //update each item
             //u = min
             if(!adjList[loop->data-1][0].visited && min.distance + loop->distance + (loop->weight + totalWeight) <= adjList[loop->data-1][0].distance + adjList[loop->data-1][0].weight) {
                 adjList[loop->data-1][0].distance = min.distance + loop->distance;
                 adjList[loop->data-1][0].weight = totalWeight + loop->weight;
+                adjList[loop->data-1][0].prev = &adjList[min.data-1][0];
                 items.push(adjList[loop->data-1][0]);
             }
         }
@@ -62,12 +80,17 @@ void AStar::executeList(std::vector<std::vector<Node> > adjList, int start, int 
 }
 
 void AStar::executeMatrix(Node **matrix, int start, int end) {
+    int nodesSearched= 1; int distance = 0;
+    auto begin = std::chrono::high_resolution_clock::now();
     std::priority_queue<Node> items;
     //set starting location
     int counter = 0;
     for(int i =0; i < matrixSize; i++) {
         matrix[i][i].distance = INT32_MAX;
+        matrix[i][i].weight = INT32_MAX;
     }
+    matrix[start-1][start-1].distance = 0;
+    matrix[start-1][start-1].weight = 0;
     for(int i =0; i < matrixSize; i++){
         if(matrix[start-1][i].data != 0) {
             matrix[i][i].distance = matrix[start-1][i].distance;
@@ -81,16 +104,28 @@ void AStar::executeMatrix(Node **matrix, int start, int end) {
     Node min;
     min.distance = 0; min.data= start;
     while(!items.empty()) {
-        if(items.top().data == end && items.top().data != INT32_MAX)
-            return;
         //skip first node
         if (min.data != start) {
             min = items.top();
             matrix[min.data-1][min.data-1].visited = true;
         }
+        if(min.data == end && min.data != INT32_MAX) {
+            auto finish = std::chrono::high_resolution_clock::now();
+            unsigned int total = std::chrono::duration_cast<std::chrono::microseconds>(finish-begin).count();
+            std::list<int> path;
+            auto iter = &matrix[end-1][end-1];
+            while(iter->prev != nullptr){
+                path.push_front(iter->data);
+                iter = &(matrix[iter->prev->data-1][iter->prev->data-1]);
+            }
+            path.push_front(start);
+            search::stats(path, total, nodesSearched, items.top().distance, items.top().weight, "Matrix");
+            return;
+        }
         //loop through each vertex
         items.pop();
         for(int i = 0; i < matrixSize; i++){
+            nodesSearched++;
             //for(auto loop = matrix[min.data-1].begin()+1; loop != adjList[min.data-1].end(); loop++) {
             //update each item
             if(matrix[min.data-1][i].data != 0) {
@@ -99,7 +134,7 @@ void AStar::executeMatrix(Node **matrix, int start, int end) {
                         matrix[i][i].distance = min.distance + matrix[min.data - 1][i].distance;
                         matrix[i][i].weight = min.weight + matrix[min.data-1][i].weight;
                         Node NodeWithIndex = matrix[i][i];
-
+                        matrix[i][i].prev = &matrix[min.data-1][min.data-1];
                         NodeWithIndex.data = i + 1;
                         items.push(NodeWithIndex);
                     }

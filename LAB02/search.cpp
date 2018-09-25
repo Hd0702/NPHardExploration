@@ -12,11 +12,10 @@
 #include "Dijkstra.h"
 #include "AStar.h"
 //load in fileName and create list or matrix
-search::~search() {
-    //destruct adj matrix here
-}
-
+std::string search::algoType = "";
+algorithm::searches search::searchType = DFS;
 void search::load(const char * searchName, const char * Weights, const char * distance) {
+    matrixSize = 0;
     adjList.clear();
     std::ifstream open(searchName);
     if(!open) {
@@ -40,17 +39,17 @@ void search::load(const char * searchName, const char * Weights, const char * di
         std::stringstream line(reader);
         int item = 0;
         std::string breaker;
-        std::vector<search::Node> points;
+        std::vector<Node> points;
         //get first
         std::getline(line, breaker, ',');
-        search::Node add;
+        Node add;
         add.x =0; add.y =0; add.z=0; add.weight = 0;
         add.data = std::stod(breaker);
         points.push_back(add);
         //seperate Node stuct for respective Node
         //set pointers to new nodes
         while(std::getline(line, breaker, ',')){
-            search::Node add;
+            Node add;
             add.x =0; add.y =0; add.z=0; add.weight = 0;
             add.data = std::stod(breaker);
             points.push_back(add);
@@ -136,68 +135,55 @@ void search::load(const char * searchName, const char * Weights, const char * di
             if(p == o){
                 matrix[p][o].data = p+1;
             }
-            std::cout << matrix[o][p].weight << " ";
         }
-        std::cout << "\n";
-    }std::cout << "\n";
+    }
     open.close();
     weights.close();
     distances.close();
 }
 
-void search::execute() {
+void search::execute(int start, int end) {
+    Node **copy = cloneMatrix();
     if(searchType == DFS){
-        Node **temp = new Node*[matrixSize];
-        for(int i =0; i <matrixSize; i++){
-            temp[i] = new Node[matrixSize];
-        }
-        for(int i = 0; i < matrixSize; i++){
-            for (int q =0; q<matrixSize; q++)
-                temp[i][q] = matrix[i][q];
-        }
-        dfs A(adjList, matrix, 1 , 13, matrixSize);
+        search::algoType = "DFS";
+        dfs A(adjList, copy , start , end, matrixSize);
     }
     else if(searchType == BFS) {
-        Node **temp = new Node*[matrixSize];
-        for(int i =0; i <matrixSize; i++){
-            temp[i] = new Node[matrixSize];
-        }
-        for(int i = 0; i < matrixSize; i++){
-            for (int q =0; q<matrixSize; q++)
-                temp[i][q] = matrix[i][q];
-        }
-        bfs B(adjList, matrix, 1, 13, matrixSize);
+        search::algoType = "BFS";
+        bfs B(adjList, copy, start, end, matrixSize);
     }
     else if(searchType == DIJSKTRA) {
-        Node **temp = new Node*[matrixSize];
-        for(int i =0; i <matrixSize; i++){
-            temp[i] = new Node[matrixSize];
-        }
-        for(int i = 0; i < matrixSize; i++){
-            for (int q =0; q<matrixSize; q++)
-                temp[i][q] = matrix[i][q];
-        }
-        Dijkstra C(adjList, temp, 1, 13, matrixSize);
+        search::algoType = "Dijkstra";
+        Dijkstra C(adjList, copy, start, end, matrixSize);
     }
     else if(searchType == A) {
-        Node **temp = new Node*[matrixSize];
-        for(int i =0; i <matrixSize; i++){
-            temp[i] = new Node[matrixSize];
-        }
-        for(int i = 0; i < matrixSize; i++){
-            for (int q =0; q<matrixSize; q++)
-                temp[i][q] = matrix[i][q];
-        }
-        AStar D(adjList, temp, 1, 13, matrixSize);
+        search::algoType = "A*";
+        AStar D(adjList, copy, start, end, matrixSize);
     }
+    for(int i =0; i < matrixSize; i++){
+        delete[] copy[i];
+    }
+    delete[] copy;
 }
 
 void search::display() {
 
 }
 
-void search::stats(unsigned int time) {
-
+void search::stats(std::list<int> finalPath,  unsigned int time ,int nodesExplored, double distance , double cost ,std::string type) {
+    std::cout << "\nAlgorithim: " << search::algoType << std::endl;
+    std::cout << "Type: " << type << std::endl;
+    std::cout << "Final Path: ";
+    for(auto iter = finalPath.begin(); iter != finalPath.end(); iter++) {
+        std::cout << *iter << " ";
+    }
+    std::cout << "\nNodes searched: " << nodesExplored << std::endl;
+    std::cout << "Time taken(microseconds) " << time << std::endl;
+    if(searchType > 1){
+        std::cout << "Distance Taken: " << distance << std::endl;
+    }
+    if(searchType == A)
+        std::cout << "Total cost: " <<cost << std::endl;
 }
 
 void search::select(int select) {
@@ -207,6 +193,26 @@ void search::select(int select) {
 void search::save(const char * fileName) {
 
 }
+
 void search::configure() {
 
+}
+
+Node** search::cloneMatrix() {
+    Node ** copy = new Node*[matrixSize];
+    for(int i =0; i < matrixSize; i++){
+        copy[i] = new Node[matrixSize];
+        for(int j =0; j< matrixSize; j++){
+            copy[i][j] = matrix[i][j];
+        }
+    }
+    return copy;
+}
+
+search::~search() {
+    if(matrixSize > 1) {
+        for (int i = 0; i < matrixSize; i++)
+            delete[] matrix[i];
+        delete[] matrix;
+    }
 }
