@@ -13,15 +13,13 @@ int main(int argc, char ** argv) {
         end = atoi(argv[2]);
     }
     //loop through all algo types and their corresponding sizes
-    algos->load("largeGraph.txt", "largeWeights.txt", "largePositions.txt");
+    algos->load("graph.txt", "weights.txt", "positions.txt");
     for(int q = 0; q < 4; q++) {
         algos->select(q);
-        for(int i =0; i < 100; i++) {
-            start = rand() % 2500 +1;
-            end = rand() % 2500 +1;
-            algos->execute(start, end);
-            algos->save("generateLargeExcel.csv");
-        }
+        start = rand() % 16 +1;
+        end = rand() % 16 +1;
+        algos->execute(start, end);
+        algos->save("finalPaths.csv");
     }
     delete algos;
     return 0;
