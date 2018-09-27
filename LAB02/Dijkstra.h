@@ -17,6 +17,11 @@ public:
 
 private:
     int matrixSize;
+    double totalTime =0;
+    int totalNodes =0;
+    int totalNodesinPath =0;
+    double totalDistance = 0;
+    double maxTime, maxNodes, maxTotal, maxDistance = 0;
 };
 
 

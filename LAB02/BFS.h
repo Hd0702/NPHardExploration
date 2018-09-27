@@ -16,10 +16,12 @@ public:
     void executeRecursiveList(std::vector<std::vector<Node> >&, std::queue<int> & , int);
     void executeRecrusiveMatrix(Node **, std::queue<int>& , int);
 private:
-    int matrixSize = 0;
     int searched = 1;
-    std::list<int> finalPath;
+    int matrixSize;
+    std::vector<int> finalPath;
     std::queue<int> bfsQueue;
+    std::vector<std::list<int> > path;
+    std::vector<int>searchSize;
     int officialStart = 0;
 };
 

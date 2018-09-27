@@ -4,36 +4,54 @@
 #include <stack>
 #include "dfs.h"
 #include <iostream>
-#include <list>
+#include <random>
 dfs::dfs(std::vector<std::vector<Node> >  adjList, Node ** matrix, int start, int end, int Size) :officialStart(start) {
     //now we execute both
     matrixSize = Size;
+    officialStart =start;
     executeIterativeList(adjList, start, end);
     executeIterativeMatrix(matrix, start, end);
-    //set matrix back to unvisited
-    for(int i = 0; i < matrixSize; i++){
-        for (int q =0; q<matrixSize; q++)
-            matrix[i][q].visited = false;
-    }
+    finalPath.clear();
     auto begin = std::chrono::high_resolution_clock::now();
-    executeRecursiveList(adjList ,start, end);
+    executeRecursiveList(adjList,start, end, 0);
     auto finish = std::chrono::high_resolution_clock::now();
-    unsigned int total = std::chrono::duration_cast<std::chrono::microseconds>(finish-begin).count();
+    auto final = std::chrono::duration_cast<std::chrono::microseconds>(finish-begin).count();
     std::list<int> path;
-    for(int i =0; i < RecursivePaths[0].size(); i++){
+    int distance = 0;
+    /*
+    for(int i =0; i < finalPath[0].size(); i++){
         path.push_back(RecursivePaths[0][i]);
+        if(RecursivePaths[0][i] != end) {
+            int counter =1;
+            for( auto j: adjList[RecursivePaths[0][i]-1]) {
+                if (j.data == RecursivePaths[0][i+1]) {
+                    distance += j.distance;
+                    break;
+                }
+                counter++;
+            }
+        }
     }
-    search::stats(path, total, searched, 0, 0, "Recursive List");
+    */
+    searchSize.clear();
+    RecursivePaths.clear();
+    search::stats(finalPath[0], final, searched, finalPath[0].size()-1, 0, "Recursive List");
+    finalPath.clear();
     path.clear();
-    searched = 1;
-    begin = std::chrono::high_resolution_clock::now();
-    executeRecrusiveMatrix(matrix, start, end);
-    finish = std::chrono::high_resolution_clock::now();
-    total = std::chrono::duration_cast<std::chrono::microseconds>(finish-begin).count();
-    for(int i =0; i < RecursivePaths[0].size(); i++){
-       path.push_back(RecursivePaths[0][i]);
+    distaces.clear();
+    searched = 0;
+    for(int j =0; j < matrixSize; j++) {
+        matrix[j][0].distance = 0;
+        for (int h = 0; h < matrixSize; h++) {
+            matrix[h][j].visited = false;
+            matrix[h][j].prev = nullptr;
+        }
     }
-    search::stats(path, total, searched, 0, 0, "Recrusive Matrix");
+    begin = std::chrono::high_resolution_clock::now();
+    executeRecrusiveMatrix(matrix, start, end, 0);
+    finish = std::chrono::high_resolution_clock::now();
+    auto total = std::chrono::duration_cast<std::chrono::microseconds>(finish-begin).count();
+    search::stats(finalPath[0], total, searched, finalPath[0].size()-1, 0, "Recrusive Matrix");
 }
 
 void dfs::executeIterativeList(std::vector<std::vector<Node> >  adjList, int start, int end) {
@@ -48,19 +66,16 @@ void dfs::executeIterativeList(std::vector<std::vector<Node> >  adjList, int sta
         //get top of stack
         Node item = Items.top();
         if (item.data == end){
-            std::list<int> data;
-            item.next = &adjList[item.data-1][item.data-1];
-            iter = adjList[start-1].begin();
-            data.push_back(start);
-            while(iter->next != nullptr){
-
-                iter = (adjList[iter->next->data-1].begin());
-                data.push_back(iter->data);
+            std::list<int> path;
+            auto iter = adjList[item.data-1].begin();
+            while (iter->prev != nullptr) {
+                path.push_front(iter->data);
+                iter = (adjList[iter->prev->data - 1].begin());
             }
-            data.push_back(end);
+            path.push_front(start);
             auto finish = std::chrono::high_resolution_clock::now();
             unsigned int total = std::chrono::duration_cast<std::chrono::microseconds>(finish-begin).count();
-            search::stats(data, total, nodesSearched, 0, 0, "Iterative List");
+            search::stats(path, total, nodesSearched, path.size()-1, 0, "Iterative List");
             return;
         }
         Items.pop();
@@ -73,7 +88,7 @@ void dfs::executeIterativeList(std::vector<std::vector<Node> >  adjList, int sta
             if(!checker->visited){
                 //set instance to true and set starting place to true
                 checker->visited = true;
-                adjList[item.data-1][0].next = &adjList[item.data-1][counter];
+                adjList[iter->data - 1][0].prev = &adjList[item.data - 1][0];
                 Items.push(*iter);
             }
             counter++;
@@ -82,6 +97,7 @@ void dfs::executeIterativeList(std::vector<std::vector<Node> >  adjList, int sta
 }
 void dfs::executeIterativeMatrix(Node ** matrix, int start, int end) {
     int nodesSearched = 1;
+    int thisDistance =0;
     auto begin = std::chrono::high_resolution_clock::now();
     std::stack<int> Items;
     Node *iter = &matrix[start-1][start-1];
@@ -91,16 +107,17 @@ void dfs::executeIterativeMatrix(Node ** matrix, int start, int end) {
         //get top of stack
         int item = Items.top();
         if(item == end) {
-            std::list<int> path;
-            path.push_back(start);
-            while(iter->next != nullptr){
-                iter = &(matrix[iter->next->data-1][iter->next->data-1]);
-                path.push_back(iter->data);
-            }
-            path.push_back(end);
             auto finish = std::chrono::high_resolution_clock::now();
             unsigned int total = std::chrono::duration_cast<std::chrono::microseconds>(finish-begin).count();
-            search::stats(path, total, nodesSearched, 0, 0, "Iterative Matrix");
+            iter = &matrix[item-1][item-1];
+            std::list<int> path;
+            while (iter->prev != nullptr) {
+                path.push_front(iter->data);
+                iter = &(matrix[iter->prev->data - 1][iter->prev->data - 1]);
+            }
+            finalPath.push_back(path);
+            path.push_front(start);
+            stats(path, total, nodesSearched, path.size()-1, 0 ,"Iterative Matrix");
             return;
         }
         Items.pop();
@@ -112,7 +129,9 @@ void dfs::executeIterativeMatrix(Node ** matrix, int start, int end) {
                 if (!matrix[i][i].visited) {
                     //set instance to true and set starting place to true
                     matrix[i][i].visited = true;
-                    matrix[item-1][item-1].next = &matrix[i][i];
+                    thisDistance += matrix[item-1][i].distance;
+                    matrix[i][i].distance = matrix[item-1][i].distance + matrix[item-1][item-1].distance;
+                    matrix[i][i].prev = &matrix[item-1][item-1];
                     Items.push(i+1);
                 }
             }
@@ -120,44 +139,52 @@ void dfs::executeIterativeMatrix(Node ** matrix, int start, int end) {
     }
 }
 
-void dfs::executeRecursiveList(std::vector<std::vector<Node> > & adjList, int start, int end) {
+void dfs::executeRecursiveList(std::vector<std::vector<Node> > & adjList, int start, int end, int thisDistance) {
     if(start == end) {
-        std::vector<int> path;
-        auto iter = adjList[officialStart-1].begin();
-        while(iter->next != nullptr){
-            path.push_back(iter->data);
-            iter = (adjList[iter->next->data-1].begin());
+        std::list<int> path;
+        auto iter = &adjList[end-1][0];
+        while(iter->prev != nullptr){
+            path.push_front(iter->data);
+            iter = iter->prev;
         }
-        path.push_back(end);
-        RecursivePaths.push_back(path);
+        path.push_front(officialStart);
+        finalPath.push_back(path);
+        searchSize.push_back(searched);
         return;
     }
     adjList[start-1][0].visited = true;
     for(auto iter = adjList[start-1].begin()+1; iter != adjList[start-1].end(); iter++) {
         searched++;
         if(!adjList[iter->data-1][0].visited) {
+            adjList[iter->data-1][0].visited = true;
             adjList[start-1][0].next = &(adjList[iter->data-1][0]);
-            dfs::executeRecursiveList(adjList, iter->data, end);
+            adjList[iter->data-1][0].prev = &adjList[start-1][0];
+            thisDistance += iter->distance;
+            dfs::executeRecursiveList(adjList, iter->data, end, thisDistance);
         }
     }
 }
 
-void dfs::executeRecrusiveMatrix(Node ** matrix, int start, int end) {
+void dfs::executeRecrusiveMatrix(Node ** matrix, int start, int end, int thisDistance) {
     if (start == end) {
-        std::vector<int> path;
-        Node * iter = &matrix[officialStart-1][officialStart-1];
-        while(iter->next != nullptr){
-            path.push_back(iter->data);
-            iter = &(matrix[iter->next->data-1][iter->next->data-1]);
+        std::list<int> path;
+        Node * iter = &matrix[end-1][end-1];
+        while(iter->prev != nullptr){
+            path.push_front(iter->data);
+            iter = &(matrix[iter->prev->data-1][iter->prev->data-1]);
         }
-        path.push_back(end);
-        RecursivePaths.push_back(path);
+        searchSize.push_back(searched);
+        path.push_front(officialStart);
+        finalPath.push_back(path);
         return;
     }
     matrix[start-1][start-1].visited = true;
     for(int i =0; i < matrixSize; i++){
         searched++;
-        if(matrix[start-1][i].data != 0 && !matrix[i][i].visited && start-1 != i)
-            dfs::executeRecrusiveMatrix(matrix, i+1, end);
+        if(matrix[start-1][i].data != 0 && !matrix[i][i].visited && start-1 != i) {
+            matrix[i][i].prev = &matrix[start-1][start-1];
+            thisDistance += matrix[start-1][i].distance;
+            dfs::executeRecrusiveMatrix(matrix, i + 1, end, thisDistance);
+        }
     }
 }

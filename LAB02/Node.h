@@ -16,7 +16,7 @@ public:
     double y = 0;
     double z = 0;
     bool visited = false;
-    int weight = 0;
+    double weight = 0;
     Node * next = nullptr;
     Node * prev = nullptr;
     //we flip this operator so smaller shorter paths are at front of priority queue

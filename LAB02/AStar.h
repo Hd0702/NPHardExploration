@@ -17,7 +17,14 @@ public:
 
 private:
     int matrixSize;
-
+    double totalTime =0;
+    int totalNodes =0;
+    int totalNodesinPath = 0;
+    int maxTime, maxNodes, maxTotal = 0;
+    double maxDistance =0;
+    double totalDistance =0;
+    double maxCost =0;
+    double totalCost =0;
 };
 
 
