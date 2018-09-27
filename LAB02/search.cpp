@@ -219,17 +219,18 @@ void search::save(const char *fileName) {
     // new data will be written to the end of the file.
     out.open(fileName, std::ios::app);
     if(!check.good()) {
-        out << "Search Type,Time,Start,End,Number of Nodes,Path,Distance,Total Nodes Visited\n";
+        out << "Search Type,Time,Start,End,Number of Nodes,Path,Distance,Total Nodes Visited,Cost\n";
     }
     check.close();
     int counter = 0;
     for(auto & item : search::finalPath) {
-        out << types[counter] << "," << search::tTime[counter] << "," << item.front() << "," << item.back() << ",";
+        out << types[counter] << "," << search::tTime[counter] << "," << item.front() << "," << item.back() << ","
+            <<item.size() << ",";
         for(auto element = item.begin(); element != item.end(); element++){
             if(*element != item.back())
                 out << *element << "->";
         }
-        out << item.back() << "," << search::nodesExplored[counter];
+        out << item.back() << "," << search::distance[counter] << "," << search::nodesExplored[counter];
         if (searchType == A) { out << "," << search::cost[counter]; }
         out << '\n';
         counter++;
