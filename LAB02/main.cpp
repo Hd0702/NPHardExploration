@@ -13,7 +13,7 @@ int main(int argc, char ** argv) {
         end = atoi(argv[2]);
     }
     //loop through all algo types and their corresponding sizes
-    algos->load("graph.txt", "weights.txt", "positions.txt");
+    algos->load("../inputfiles/graph.txt", "../inputfiles/weights.txt", "../inputfiles/positions.txt");
     for(int q = 0; q < 4; q++) {
         algos->select(q);
         algos->execute(start, end);
