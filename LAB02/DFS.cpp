@@ -17,22 +17,6 @@ dfs::dfs(std::vector<std::vector<Node> >  adjList, Node ** matrix, int start, in
     auto finish = std::chrono::high_resolution_clock::now();
     auto final = std::chrono::duration_cast<std::chrono::microseconds>(finish-begin).count();
     std::list<int> path;
-    int distance = 0;
-    /*
-    for(int i =0; i < finalPath[0].size(); i++){
-        path.push_back(RecursivePaths[0][i]);
-        if(RecursivePaths[0][i] != end) {
-            int counter =1;
-            for( auto j: adjList[RecursivePaths[0][i]-1]) {
-                if (j.data == RecursivePaths[0][i+1]) {
-                    distance += j.distance;
-                    break;
-                }
-                counter++;
-            }
-        }
-    }
-    */
     searchSize.clear();
     RecursivePaths.clear();
     search::stats(finalPath[0], final, searched, finalPath[0].size()-1, 0, "Recursive List");

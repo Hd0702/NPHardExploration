@@ -16,8 +16,6 @@ int main(int argc, char ** argv) {
     algos->load("graph.txt", "weights.txt", "positions.txt");
     for(int q = 0; q < 4; q++) {
         algos->select(q);
-        start = rand() % 16 +1;
-        end = rand() % 16 +1;
         algos->execute(start, end);
         algos->save("finalPaths.csv");
     }
