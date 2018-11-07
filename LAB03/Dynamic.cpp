@@ -19,13 +19,6 @@ void Dynamic::execute() {
     auto end = std::chrono::high_resolution_clock::now();
     unsigned int total = std::chrono::duration_cast<std::chrono::microseconds>(end-start).count();
     ar[0].first = 1;
-    //calculate total distance
-   // for(int i =0; i < matrixSize; i++){
-   //     std::cout << ar[i].first << std::endl;
-   // }
-    //for(int i =1; i < matrixSize; i++){
-    //    TDistance += matrix[ar[i-1].first-1][ar[i].first-1].distance;
-    //}
     TDistance += matrix[ar[matrixSize-1].first][0].distance;
     showStats(total);
 }
