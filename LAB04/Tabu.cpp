@@ -10,7 +10,6 @@
 void Tabu::execute() {
     //we should come up with an original solution here, start hill climbing
     //save each time we get a new best solution
-    //TODO:include checking if tabu list is greater than max number of combinations, if it reaches the max number, quit
     std::vector<int> listSizes = {100, 500, 1000};
     std::vector<int> starting;
     std::srand(time(NULL));
@@ -37,7 +36,6 @@ void Tabu::execute() {
 
     //now we can focus on hill climbing and the tabu list
 }
-//TODO: change taboolist size for multiple types of lists
 unsigned int Tabu::run() {
     //get best solution until we hit a peak
     //this is hill climbing, need to add tabu list no
@@ -71,9 +69,6 @@ void Tabu::setMatrix(Node ** m, int size) {
     Matrix = m;
     matrixSize = size;
 }
-//other best neighbor attempts
-//pick the first element to a number 1-size, then swap the first element with whichever index appears
-//(basically same as before just less complete)
 //2. swapping the last element whit all of the others
 //1. complete swap, 2.front partial swap, 3. back partial swap
 std::vector<int> Tabu::bestNeighbor(std::vector<int> &current) {
