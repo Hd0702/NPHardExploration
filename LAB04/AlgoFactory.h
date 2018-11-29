@@ -8,7 +8,7 @@
 class BaseDecorator;
 class AlgoFactory {
 public:
-    enum algos {BRUTEFORCE = 0, DYNAMIC, TABU};
+    enum algos {BRUTEFORCE = 0, DYNAMIC, TABU, GENETIC};
     static BaseDecorator * Create(algos);
 };
 

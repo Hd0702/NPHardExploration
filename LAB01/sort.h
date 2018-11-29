@@ -13,20 +13,30 @@
 class sort: public algorithm {
 public:
     sort() = default;
+    sort(const sort &);
     void load(const char*, const char *);
     void execute();
     void display();
     void stats(unsigned int);
-    void select(sorts);
+    void select(int);
     void save(const char*);
     void configure();
+    //ADDING BUILDER FUNCTIONALITY
+    enum Configuration { RECURSIVE = 0, ITERATIVE, LIST, MATRIX };
+    void setExecutionType(sort::Configuration exe);
+    void setStorageType(Configuration );
+    void getConfiguration();
+    //prototype
+    algorithm * Clone();
+
 private:
+    Configuration executionType;
+    Configuration storageType;
     static std::string algoType;
     static int dataSize;
     static std::string dataType;
     std::vector<int> data;
     algorithm::sorts sortType;
-
 };
 
 

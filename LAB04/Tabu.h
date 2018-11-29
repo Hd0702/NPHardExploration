@@ -11,12 +11,15 @@ class Tabu: public Decorator {
 public:
     Tabu(BaseDecorator * br): Decorator(br){}
     void execute();
-    void run();
+    unsigned int run();
     void setMatrix(Node**, int size);
 private:
     std::vector<int> bestNeighbor(std::vector<int> & current);
-    double calculateDistance(std::vector<int> & current);
     void showStats(unsigned int);
+    char * neighbortypes[3] = {"Full swap", "Front swap", "Back swap"};
+    int listSize;
+    int selection;
+    std::vector<std::pair<unsigned int, double> > times;
     std::list<std::vector<int> > TabuList;
     std::vector<int> solution;
     int matrixSize;

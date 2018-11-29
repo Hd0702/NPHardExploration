@@ -16,7 +16,7 @@ private:
 template <typename T>
 insertionSort<T>::insertionSort(std::vector<T> & items) {
     auto start = std::chrono::high_resolution_clock::now();
-    sort(items);
+    insertionSort::sort(items);
     auto end = std::chrono::high_resolution_clock::now();
     unsigned int total = std::chrono::duration_cast<std::chrono::microseconds>(end-start).count();
     sort::stats(total);

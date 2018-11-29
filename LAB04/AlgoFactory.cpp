@@ -8,6 +8,7 @@
 #include "Salesman.h"
 #include "BruteForce.h"
 #include "Dynamic.h"
+#include "Genetic.h"
 #include "Tabu.h"
 BaseDecorator * AlgoFactory::Create(AlgoFactory::algos type){
     BaseDecorator * br;
@@ -20,6 +21,9 @@ BaseDecorator * AlgoFactory::Create(AlgoFactory::algos type){
             break;
         case algos::TABU:
             br = new Tabu(new Salesman());
+            break;
+        case algos ::GENETIC:
+            br = new Genetic(new Salesman());
             break;
         default:
             br = new BruteForce(new Salesman());

@@ -17,6 +17,16 @@ std::string sort::algoType = "";
 std::string sort::dataType ="";
 
 //load takes a filename and reads contents into a vector
+sort::sort(const sort & srt) : algorithm(srt){
+    //prototype
+    executionType = srt.executionType;
+    storageType= srt.storageType;
+};
+algorithm* sort::Clone(){
+    //returns brand new object of type sort with same config as current object
+    return new sort(*this);
+}
+
 void sort::load(const char * fileName, const char * fileType) {
     sort::dataSize = 0;
     sort::dataType = fileType;
@@ -66,8 +76,8 @@ void sort::stats(unsigned int time){
     std::cout << "Time taken(in microseconds): " << time << "\n" << std::endl;
 }
 //sets sort type
-void sort::select(algorithm::sorts item) {
-    sortType = item;
+void sort::select(int item) {
+    sortType = algorithm::sorts(item);
 }
 //saves to file with a passed in filename formatted in main
 void sort::save(const char * fileName) {
@@ -86,4 +96,24 @@ void sort::save(const char * fileName) {
 //this method should be blank for future expandability
 void sort::configure() {
 
+}
+void sort::setExecutionType(sort::Configuration exe) {
+    executionType = exe;
+}
+void sort::setStorageType(Configuration conf) {
+    storageType = conf;
+}
+void sort::getConfiguration() {
+    if(executionType == ITERATIVE){
+        std::cout << "Iterative execution\n";
+    }
+    else {
+        std::cout << "Recurisve Execution\n";
+    }
+    if(executionType == LIST){
+        std::cout <<"with adjacency list" << std::endl;
+    }
+    else {
+        std::cout << "with adjacency matrix" << std::endl;
+    }
 }

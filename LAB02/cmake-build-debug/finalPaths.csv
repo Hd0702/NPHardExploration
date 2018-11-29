@@ -1,0 +1,25 @@
+Search Type,Time,Start,End,Number of Nodes,Path,Distance,Total Nodes Visited,Cost
+DFS Iterative List,17,15,6,6,15->16->12->8->7->6,5,16
+DFS Iterative Matrix,12,15,6,6,15->16->12->8->7->6,5,81
+DFS Recursive List,17,15,6,8,15->14->13->9->5->1->2->6,7,44
+DFS Recrusive Matrix,15,15,6,8,15->11->7->3->2->1->5->6,7,240
+BFS Iterative List,10,15,6,4,15->14->10->6,3,29
+BFS Iterative Matrix,9,15,6,4,15->11->7->6,3,144
+BFS Recursive List,14,15,6,4,15->11->7->6,3,29
+BFS Recursive Matrix,7,15,6,4,15->11->7->6,3,145
+Dijkstra  List,36,15,6,4,15->11->7->6,3,19
+Dijkstra Matrix,28,15,6,4,15->14->10->6,3,63
+A* List,31,15,6,4,15->11->7->6,3,18,5
+A* Matrix,25,15,6,4,15->11->7->6,3,55,5
+DFS Iterative List,23,15,6,6,15->16->12->8->7->6,5,16
+DFS Iterative Matrix,28,15,6,6,15->16->12->8->7->6,5,81
+DFS Recursive List,22,15,6,8,15->14->13->9->5->1->2->6,7,44
+DFS Recrusive Matrix,23,15,6,8,15->11->7->3->2->1->5->6,7,240
+BFS Iterative List,33,15,6,4,15->14->10->6,3,29
+BFS Iterative Matrix,32,15,6,4,15->11->7->6,3,144
+BFS Recursive List,56,15,6,4,15->11->7->6,3,29
+BFS Recursive Matrix,26,15,6,4,15->11->7->6,3,145
+Dijkstra  List,104,15,6,4,15->11->7->6,3,19
+Dijkstra Matrix,142,15,6,4,15->14->10->6,3,63
+A* List,80,15,6,4,15->11->7->6,3,18,5
+A* Matrix,74,15,6,4,15->11->7->6,3,55,5

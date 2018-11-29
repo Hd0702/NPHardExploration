@@ -37,8 +37,13 @@ std::vector<int> Decorator::bestNeighbor(std::vector<int> &current, Node **matri
 }
 double Decorator::calculateDistance(std::vector<int> &current, Node **matrix) {
     double total = 0;
-    for(int i =1; i < current.size(); i++){
-        total += matrix[current[i-1]-1][current[i]-1].distance;
+    std::vector<int> temp = current;
+    for (int i = 1; i < current.size(); i++) {
+        if(current[i] <= current.size() && current[i] != 0)
+            total += matrix[current[i - 1] - 1][current[i] - 1].distance;
+        else {
+            i++;
+        }
     }
     return total;
 }
