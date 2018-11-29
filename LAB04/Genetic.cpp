@@ -56,7 +56,7 @@ unsigned int Genetic::run() {
     std::priority_queue<std::pair<double,int>,std::vector<std::pair<double,int>>,CompareDist> distances;
     auto t1 = std::chrono::high_resolution_clock::now();
     int po =0;
-    while (bestDistance != matrixSize && po < matrixSize*2000) {
+    while ( po < matrixSize*2000) {
         int i = 0;
         double tot = 0;
         for (auto j = population.begin(); j != population.end(); j++) {

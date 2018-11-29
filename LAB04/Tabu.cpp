@@ -46,7 +46,7 @@ unsigned int Tabu::run() {
     double globalBest = bestLocal;
     std::vector<int> bestLocalVec = solution;
     std::vector<int> bestGlobalVec = solution;
-    while(i < matrixSize*2000 && globalBest != matrixSize) {
+    while(i < matrixSize*2000) {
         std::vector<int> temp = bestNeighbor(solution);
         double a = Decorator::calculateDistance(temp, Matrix);
         if(a < globalBest) {
