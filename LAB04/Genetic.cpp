@@ -145,9 +145,13 @@ void Genetic::setMatrix(Node ** m , int size) {
 }
 
 void Genetic::showStats(unsigned int time) {
+    std::string a ="";
+    for(auto &j : bestSolution){
+        a+= std::to_string(j) + " ";
+    }
     std::string format =  std::string("Genetic\nSelection Type: ") + strs[selection] +
                           "\nCrossover Type: " + strs[probSelect+3] +
-                          "\nMutation Percent: " + std::to_string(MutationChance) +'%';
+                          "\nMutation Percent: " + std::to_string(MutationChance) +"%\npath: " + a.c_str() + "\n";
     Decorator::stats((char*)format.c_str() ,time, 0, times.back().second);
 }
 #include <iostream>

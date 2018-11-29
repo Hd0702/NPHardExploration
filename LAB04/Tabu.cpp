@@ -110,8 +110,12 @@ std::vector<int> Tabu::bestNeighbor(std::vector<int> &current) {
 }
 
 void Tabu::showStats(unsigned int time) {
+    std::string a ="";
+    for(auto &j : solution){
+        a+= std::to_string(j) + " ";
+    }
     std::string format =  std::string("Tabu\nNeighbor Type: ") + neighbortypes[selection] +
-            "\nTabu List Size: " + std::to_string(listSize);
+            "\nTabu List Size: " + std::to_string(listSize) + "\npath: " + a.c_str() + "\n";
     Decorator::stats((char*)format.c_str() , time, 0, times.back().second);
 
 }
