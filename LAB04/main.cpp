@@ -10,7 +10,7 @@ int main() {
     auto mat = Reader::Read(op.c_str());
     int a = Reader::getSize();
     j.setMatrix(mat);
-    for(int i =0; i < 4; i ++) {
+    for(int i =2; i < 4; i ++) {
         j.setAlgo(AlgoFactory::algos(i));
         j.setSize(a);
         j.start();
