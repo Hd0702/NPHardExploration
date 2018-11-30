@@ -4,6 +4,7 @@
 
 #include "BruteForce.h"
 #include <iostream>
+#include <string>
 void BruteForce::execute() {
     Decorator::execute();
     std::cout << "Brute Force Execute" << std::endl;
@@ -47,5 +48,9 @@ void BruteForce::setMatrix(Node** mat, int size){
     matrixSize = size;
 }
 void BruteForce::showStats(unsigned int time) {
-    Decorator::stats("Brute Force", time, totalCount, finalDistance);
+    std::string A = "Brute Force \n Path: ";
+    for(auto &j : bestPath){
+        A += std::to_string(j.id); + " ";
+    }
+    Decorator::stats((char*)A.c_str(), time, totalCount, finalDistance);
 }
