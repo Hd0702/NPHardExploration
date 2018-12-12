@@ -4,14 +4,9 @@
 
 #include "Swarm.h"
 #include <random>
-#include <ctime>
-#include <algorithm>
-#include <cstdlib>
 #include <map>
 void Swarm::execute() {
 
-    //how can we save current velocity?
-    //seprate vectors probably
     std::vector<std::pair<std::vector<int>,std::pair<std::vector<int>, double> > >startPop;
     std::vector<std::vector<int> > startingV;
     std::srand ( unsigned ( std::time(0) ) );
@@ -110,7 +105,6 @@ unsigned int Swarm::run() {
 }
 
 std::vector<int> Swarm::setVelocity(int popIndex) {
-    //now for this we have to do the formula
     std::vector<int> newVelocity = velocities[popIndex];
     double r1 = ((double)rand()/(double)RAND_MAX);
     double r2 = ((double)rand()/(double)RAND_MAX);
@@ -148,8 +142,6 @@ void Swarm::stats(unsigned int time) {
     for(auto &j : bestSolution){
         b+= std::to_string(j) + " ";
     }
-    //std::string format = std::string("Annealing\nStarting Temp: ") + std::to_string(temprature) + "\nDecrease type: "
-    //                     + selections[selection] + "\nSolution: " + b;
     std::string format = std::string("Particle Swarm\nLocal Learning Factor: ") + std::to_string(localLearning)
                          + "\nGlobal Learning Factor: " + std::to_string(globalLearning) + "\nMax Velocity: "
                          + std::to_string(maxVelocity) + "\nSolution: " + b;

@@ -4,14 +4,8 @@
 
 #include "Annealing.h"
 #include <random>
-#include <cmath>
-#include <string>
 
 void Annealing::execute() {
-    //decrease by 5 each time
-    //decrease by 2 each time
-    //decrease by 10 every 500 times
-    //starting 5000, 500, 100
     srand((unsigned)time(NULL));
     std::vector<int> starting;
     std::srand(time(NULL));
@@ -21,7 +15,7 @@ void Annealing::execute() {
     std::shuffle(std::begin(temp), std::end(temp), rng);
     temp.insert(temp.begin(), 1);
     temp.push_back(1);
-    std::vector<int> tempratures = {5000, 500, 100};
+    std::vector<int> tempratures = {100, 500, 5000};
     for(int i =0; i < 3; i++) {
         selection = i;
         for(auto & j : tempratures) {
@@ -36,14 +30,12 @@ void Annealing::execute() {
 
 void Annealing::run() {
     auto start = std::chrono::high_resolution_clock::now();
-    int a =0;
     int currentTemp = temprature;
     double currentEnergy = Decorator::calculateDistance(solution, matrix);
     int i =0;
     bestSolution = solution;
     bestDistance = currentEnergy;
     while(currentTemp > 0 && bestDistance != matrixSize) {
-        a= currentEnergy;
         //now get a neighbor and check its fitness
         std::vector<int> temp = getNeighbor(solution);
         double newEnergy = Decorator::calculateDistance(temp, matrix);
